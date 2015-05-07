@@ -55,7 +55,7 @@ void registroProducto(int id){
 void buscaProducto(int id){
     //al buscar esta te da nombre, codigo y stock del producto
     
-    printf("\nPrecio del producto:\t %f", Abarrotera[id].precio);
+    printf("\nPrecio del producto:\t %.2f", Abarrotera[id].precio);
     printf("\nNombre del producto:\t %s", Abarrotera[id].nombre);
     printf("\nStock  del producto:\t %d", Abarrotera[id].stock);
     printf("\nCodigo del producto:\t %d\n", Abarrotera[id].codigo);
@@ -258,6 +258,11 @@ int main() {
                             break;
                             
                         default:
+                            printf ("**********************************************\n");
+                            printf ("*        Opcion Invalida Favor de            *");
+                            printf ("\n*        selecionar una opcion valida        *");
+                            printf ("\n**********************************************");
+                            printf ("\n");
                             break;
                     }
                 }while (op_2!=0);
@@ -278,6 +283,11 @@ int main() {
                 break;
                 
             default:
+                printf ("**********************************************\n");
+                printf ("*        Opcion Invalida Favor de            *");
+                printf ("\n*        selecionar una opcion valida        *");
+                printf ("\n**********************************************");
+                printf ("\n");
                 break;
         }
         
