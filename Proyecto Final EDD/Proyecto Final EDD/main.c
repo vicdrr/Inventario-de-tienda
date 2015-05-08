@@ -18,6 +18,7 @@ typedef struct abarrotera{
     int stock;
     int codigo;
     float precio;
+    int CodigoOriginial;
     
     //struct abarrotera *siguiente;
     //struct abarrotera *anterior;
@@ -34,6 +35,10 @@ int hash(int clave){
 
 void registroProducto(int id){
     //Aqui se le da nombre y stock al codigo
+    
+    printf("Reintroduce el codigo del producto para regisrar\n");
+    fflush(stdin);
+    scanf("%d", &Abarrotera[id].CodigoOriginial);
     
     printf("\nNombre del producto: ");
     fflush(stdin);
@@ -58,7 +63,7 @@ void buscaProducto(int id){
     printf("\nPrecio del producto:\t %.2f", Abarrotera[id].precio);
     printf("\nNombre del producto:\t %s", Abarrotera[id].nombre);
     printf("\nStock  del producto:\t %d", Abarrotera[id].stock);
-    printf("\nCodigo del producto:\t %d\n", Abarrotera[id].codigo);
+    printf("\nCodigo del producto:\t %d\n", Abarrotera[id].CodigoOriginial);
 }
 
 void sumaStock(int id){
@@ -84,6 +89,16 @@ void restaStock(int id){
         printf("\nSeria un total de: %d %s\nPor el precio de: $%f", resta, Abarrotera[id].nombre, precio);
     }else{
         printf("\nNo tiene suficiente producto en Stock\n");
+    }
+}
+
+void imprimirProductos(){
+    for (int i=0; i<30; i++) {
+        if (Abarrotera[i].stock != 0) {
+            printf("\n-----------------------------------\n");
+            buscaProducto(i);
+            printf("\n-----------------------------------\n");
+        }
     }
 }
 
@@ -200,7 +215,8 @@ int menu_Ppal (){
     printf ("\n*        1. Ventas                           *");
     printf ("\n*        2. Registro de Productos            *");
     printf ("\n*        3. Eliminar productos del catalogo  *");
-    printf ("\n*        4. Salir                            *");
+    printf ("\n*        4. Imprimir lista de productos      *");
+    printf ("\n*        5. Salir                            *");
     printf ("\n**********************************************");
     printf ("\n");
     printf ("\nElige la opcion numero: ");
@@ -236,6 +252,9 @@ int main() {
                 do{
                     op_2=menu_Ventas();
                     switch (op_2) {
+                        case 0:
+                            
+                            break;
                         case 6:
                             //Venta de productos
                             printf("Introduce el codigo del producto a vender\n");
@@ -282,6 +301,14 @@ int main() {
                 eliminar(id);
                 break;
                 
+            case 4:
+                //Imprime lista de productos
+                imprimirProductos();
+                break;
+ 
+            case 5:
+                
+                break;
             default:
                 printf ("**********************************************\n");
                 printf ("*        Opcion Invalida Favor de            *");
@@ -292,7 +319,7 @@ int main() {
         }
         
         
-    }while (op!=4);
+    }while (op!=5);
     
     
     printf("Fin del programa\n");
