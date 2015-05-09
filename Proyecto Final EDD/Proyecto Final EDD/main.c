@@ -33,27 +33,34 @@ int hash(int clave){
     return clave % SIZE;
 }
 
-void registroProducto(int id){
+void registroProducto(int id, int clave){
     //Aqui se le da nombre y stock al codigo
     
     printf("Reintroduce el codigo del producto para regisrar\n");
     fflush(stdin);
     scanf("%d", &Abarrotera[id].CodigoOriginial);
     
-    printf("\nNombre del producto: ");
-    fflush(stdin);
-    //gets(Abarrotera[id].nombre);
-    scanf("%s", &Abarrotera[id].nombre);
-    
-    printf("\nStock del producto: ");
-    fflush(stdin);
-    scanf("%d", &Abarrotera[id].stock);
-    
-    printf("\nPrecio del producto: $");
-    fflush(stdin);
-    scanf("%f", &Abarrotera[id].precio);
-    printf("\n");
-    Abarrotera[id].codigo = id;
+    if (Abarrotera[id].CodigoOriginial == clave) {
+        
+        printf("\nNombre del producto: ");
+        fflush(stdin);
+        //gets(Abarrotera[id].nombre);
+        scanf("%s", &Abarrotera[id].nombre);
+        
+        printf("\nStock del producto: ");
+        fflush(stdin);
+        scanf("%d", &Abarrotera[id].stock);
+        
+        printf("\nPrecio del producto: $");
+        fflush(stdin);
+        scanf("%f", &Abarrotera[id].precio);
+        printf("\n");
+        Abarrotera[id].codigo = id;
+        
+    }else{
+        printf("\nNo coinciden los codigos, intente nuevamente\n");
+        eliminar(clave);
+    }
     
 }
 
@@ -83,7 +90,7 @@ void restaStock(int id){
     
     printf("\nCantidad del producto que se vende: ");
     scanf("%d", &resta);
-    if (resta<Abarrotera[id].stock) {
+    if (resta<=Abarrotera[id].stock) {
         Abarrotera[id].stock = (Abarrotera[id].stock)-resta;
         precio = resta*Abarrotera[id].precio;
         printf("\nSeria un total de: %d %s\nPor el precio de: $%f", resta, Abarrotera[id].nombre, precio);
@@ -100,6 +107,27 @@ void imprimirProductos(){
             printf("\n-----------------------------------\n");
         }
     }
+}
+
+void buscacodigoProducto(int id) {
+    printf("\nCodigo del producto:\t %d\n", Abarrotera[id].CodigoOriginial);
+}
+
+int busquedaCodigo(char nombre[20]) {
+    int id;
+    for(id = 0; Abarrotera[id].nombre!=NULL ; id++)
+    {
+        if(Abarrotera[id].nombre[0]== nombre[0]){
+            if(Abarrotera[id].nombre[1]== nombre[1]){
+                if(Abarrotera[id].nombre[1]== nombre[1]){
+                    return id;
+                }
+            }
+        }else
+            printf("\nNo existe producto\n");
+    }
+    
+    return 0;
 }
 
 int entradasProducto(int clave){
@@ -133,21 +161,21 @@ int salidasProducto(int clave){
     }
 }
 
-int insertar (int clave){
+int insertar (int clave, int pass){
     //aqui se inserta
     int indice;
     indice = hash(clave);
     
     if (tabla_hash[indice] != 0) {
         int inicio = indice + 1;
-        printf("Hubo Colision\n");
+        //printf("Hubo Colision\n");
         while (tabla_hash[inicio % SIZE] != 0 && inicio % SIZE != indice) {
-            printf("Hubo Colision\n");
+            //printf("Hubo Colision\n");
             inicio++;
         }
         if (tabla_hash[inicio % SIZE] == 0) {
             tabla_hash[indice] = clave;
-            registroProducto(indice);
+            registroProducto(indice, pass);
             return 1;
         }else{
             printf("Espacio agotado\n");
@@ -155,7 +183,7 @@ int insertar (int clave){
         }
     }else{
         tabla_hash[indice] = clave;
-        registroProducto(indice);
+        registroProducto(indice, pass);
         return 1;
     }
     
@@ -173,9 +201,9 @@ int buscar (int clave){
         return indice;
     }else{
         int inicio = indice + 1;
-        printf("Hubo Colision\n");
+        //printf("Hubo Colision\n");
         while (tabla_hash[inicio % SIZE] != clave && inicio % SIZE != indice) {
-            printf("Hubo Colision\n");
+            //printf("Hubo Colision\n");
             inicio++;
         }
         if (tabla_hash[inicio % SIZE] == clave) {
@@ -183,7 +211,7 @@ int buscar (int clave){
             buscaProducto(indice);
             return inicio % SIZE;
         }else{
-            
+            printf("No existe el producto\n");
             return -1;
         }
     }
@@ -207,17 +235,18 @@ int menu_Ppal (){
     
     int opcion;
     printf ("\n");
-    printf ("**********************************************\n");
-    printf ("*               Abarrotera                   *");
-    printf ("\n*   Bienvenido al sistema de venta           *");
-    printf ("\n*        de la abarrotera, que desea hacer:  *");
-    printf ("\n*                                            *");
-    printf ("\n*        1. Ventas                           *");
-    printf ("\n*        2. Registro de Productos            *");
-    printf ("\n*        3. Eliminar productos del catalogo  *");
-    printf ("\n*        4. Imprimir lista de productos      *");
-    printf ("\n*        5. Salir                            *");
-    printf ("\n**********************************************");
+    printf("**********************************************\n");
+    printf("*               Abarrotera                   *");
+    printf("\n*   Bienvenido al sistema de venta           *");
+    printf("\n*        de la abarrotera, que desea hacer:  *");
+    printf("\n*                                            *");
+    printf("\n*        1. Ventas                           *");
+    printf("\n*        2. Registro de Productos            *");
+    printf("\n*        3. Eliminar productos del catalogo  *");
+    printf("\n*        4. Imprimir lista de productos      *");
+    printf("\n*        5. Buscar por nombre                *");
+    printf("\n*        6. Salir                            *");
+    printf("\n**********************************************");
     printf ("\n");
     printf ("\nElige la opcion numero: ");
     scanf ("%i",&opcion);\
@@ -227,14 +256,14 @@ int menu_Ppal (){
 int menu_Ventas (){
     int opcion;
     printf ("\n");
-    printf ("**********************************************\n");
-    printf ("*               Ventas                       *");
-    printf ("\n*                                            *");
-    printf ("\n*        6. Vender producto                  *");
-    printf ("\n*        7. Entrada de Productos             *");
-    printf ("\n*        8. Buscar Precio                    *");
-    printf ("\n*        0. Salir                            *");
-    printf ("\n**********************************************");
+    printf("**********************************************\n");
+    printf("*               Ventas                       *");
+    printf("\n*                                            *");
+    printf("\n*        7. Vender producto                  *");
+    printf("\n*        8. Entrada de Productos             *");
+    printf("\n*        9. Buscar Precio                    *");
+    printf("\n*        0. Salir                            *");
+    printf("\n**********************************************");
     printf ("\n");
     printf ("\nElige la opcion numero: ");
     scanf ("%i",&opcion);\
@@ -242,7 +271,7 @@ int menu_Ventas (){
 }
 
 int main() {
-    int op, id, op_2;
+    int op, id, op_2, nombre;
     
     do{
         op=menu_Ppal();
@@ -255,21 +284,21 @@ int main() {
                         case 0:
                             
                             break;
-                        case 6:
+                        case 7:
                             //Venta de productos
                             printf("Introduce el codigo del producto a vender\n");
                             scanf("%d", &id);
                             salidasProducto(id);
                             break;
                             
-                        case 7:
+                        case 8:
                             //Entrada de productos
                             printf("Introduce el codigo del producto que entra\n");
                             scanf("%d", &id);
                             entradasProducto(id);
                             break;
                             
-                        case 8:
+                        case 9:
                             //Busqueda de precios
                             printf("Introduce el codigo del producto para buscar\n");
                             scanf("%d", &id);
@@ -291,7 +320,7 @@ int main() {
                 //Registro
                 printf("Introduce el codigo del producto para regisrar\n");
                 scanf("%d", &id);
-                insertar(id);
+                insertar(id, id);
                 break;
                 
             case 3:
@@ -307,7 +336,17 @@ int main() {
                 break;
  
             case 5:
+                //Busqueda de codigo
+                printf("Introduce el nombre del producto a buscar\n");
+                fflush(stdin);
+                //gets(nombre);
+                scanf("%s", &nombre);
+                fflush(stdin);
+                buscacodigoProducto(busquedaCodigo(nombre));
                 
+                break;
+            case 6:
+
                 break;
             default:
                 printf ("**********************************************\n");
@@ -319,7 +358,7 @@ int main() {
         }
         
         
-    }while (op!=5);
+    }while (op!=6);
     
     
     printf("Fin del programa\n");
